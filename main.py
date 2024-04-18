@@ -9,10 +9,11 @@ class Source(object):
         self.id = Source.id  # id de la source (appelle genere_id)
         self.poisson = None 
         self.paquets = list()  # liste des paquets à envoyer par la source
+        self.taux_arrive = int(input("Taux d'arrivée de la source: "))
 
     def generer_paquet(self):  # fonction qui créer des paquets composées de bits
         contenu = list()
-        for i in range(rd.randint(1, 10)):
+        for i in range(rd.randint(2, 10)):
             contenu.append("")
             for _ in range(rd.randint(1, 12)):
                 contenu[i] += str(rd.randint(0, 1))
@@ -32,6 +33,7 @@ class Buffer(object):
         self.queue = list()  # file d'attente du buffer
         self.paquets_perdus = list()  # paquets perdus du buffer
         self.paquets_transmis = list()  # paquets transmis
+        self.taux_lien = int(input("Taux transmission du lien: "))
 
     def __add__(self, paquet):
         if len(self.queue()) < self.capacite():
@@ -49,9 +51,9 @@ class Paquet(object):
     def __init__(self, source_id, contenu):
         Paquet.id += 1
         self.id = Paquet.id
-        self.source_id = source_id  # id de la source du paquet 
+        self.source_id = source_id  # id de la source du paquet
         self.contenu = contenu  # contenu du paquet
-        self.taille = len(contenu)  # taille du paquet
+        self.taille = len(contenu)
 
     def __str__(self):
         return f"Paquet {self.contenu} de source {self.source_id}"
