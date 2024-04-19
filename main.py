@@ -66,7 +66,10 @@ class Paquet(object):
 
 def test():
     s1 = Source()
-    s1.generer_paquet()
+    buffer = Buffer(10)
+    paquets = s1.generer_paquet()
+    for elt in paquets:
+        print(elt)
 
 
 if __name__ == "__main__":
