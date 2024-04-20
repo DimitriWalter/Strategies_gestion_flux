@@ -1,11 +1,10 @@
 import time
 import random as rd
 import numpy as np
+import math
 
 
 class Source(object):
-    poisson_lambda = 5
-    intervalle = 1
     id = 0  # variable id pour les sources
     def __init__(self):
         Source.id += 1  # incrémente de + 1 à chaque création d'une source
@@ -14,18 +13,23 @@ class Source(object):
         self.taux_arrive = 120
 
     def generer_paquet(self):  # fonction qui créer des paquets composées de bits
-        num_packets = np.random.poisson(Source.poisson_lambda * Source.intervalle)
         paquets = list()
-        for _ in range(num_packets):
+        for _ in range(rd.randint(3,7)):
             contenu = list()
-            for i in range(rd.randint(2, 10)):
+            for i in range(rd.randint(2, 9)):
                 contenu.append("")
-                for _ in range(rd.randint(2, 12)):
+                for _ in range(5):
                     contenu[i] += str(rd.randint(0, 1))
 
             paquets.append(Paquet(self.id, contenu, self.taux_arrive))
 
         return paquets
+    
+    def arrive(self, paquet, buffer):  # fonction d'arrivée des paquets dans le buffer
+        if paquet.taux_arrive > Buffer.taux_lien:
+            buffer + paquet
+        else:
+            buffer.paquets_transmis.append(paquet)
 
 
 class Buffer(object):
@@ -39,15 +43,18 @@ class Buffer(object):
         self.paquets_perdus = list()  # paquets perdus du buffer
         self.paquets_transmis = list()  # paquets transmis
 
-    def __add__(self, paquet):
-        if len(self.queue()) < self.capacite():
+    def __add__(self, paquet):  # fonction d'insertion de paquets dans le buffer
+        if len(self.queue) < self.capacite:
             self.queue.append(paquet)
+            print(f"Paquet {paquet.id}, {paquet.contenu} arrivé dans le buffer")
         else:
             self.paquets_perdus.append(paquet)
             print("Buffer plein")
 
-    def __sub__(self):
-        self.paquets_transmis.append(self.paquets_perdus.pop())
+    def retrait(self):  # fonction de retrait d'un paquet du buffer
+        paquet = self.queue.pop(0)
+        print(f"Paquet {paquet.id} est sorti du buffer")
+        self.paquets_transmis.append(paquet)
 
 
 class Paquet(object):
@@ -69,7 +76,9 @@ def test():
     buffer = Buffer(10)
     paquets = s1.generer_paquet()
     for elt in paquets:
-        print(elt)
+        s1.arrive(elt, buffer)
+
+    buffer.retrait()
 
 
 if __name__ == "__main__":
