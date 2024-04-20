@@ -6,15 +6,15 @@ import math
 
 class Source(object):
     id = 0  # variable id pour les sources
-    def __init__(self):
+    def __init__(self, lambd):
         Source.id += 1  # incrémente de + 1 à chaque création d'une source
         self.id = Source.id  # id de la source (appelle genere_id)
         self.paquets = list()  # liste des paquets à envoyer par la source
-        self.taux_arrive = 120
+        self.taux_arrive = lambd
 
     def generer_paquet(self):  # fonction qui créer des paquets composées de bits
         paquets = list()
-        for _ in range(rd.randint(3,7)):
+        for _ in range(self.taux_arrive):
             contenu = list()
             for i in range(rd.randint(2, 9)):
                 contenu.append("")
@@ -34,7 +34,7 @@ class Source(object):
 
 class Buffer(object):
     id = 0  # variable id pour les buffer
-    taux_lien = 100  # taux de transmission du lien
+    taux_lien = 2  # taux de transmission du lien
     def __init__(self, capacite):
         Buffer.id += 1
         self.id = Buffer.id
@@ -52,9 +52,10 @@ class Buffer(object):
             print("Buffer plein")
 
     def retrait(self):  # fonction de retrait d'un paquet du buffer
-        paquet = self.queue.pop(0)
-        print(f"Paquet {paquet.id} est sorti du buffer")
-        self.paquets_transmis.append(paquet)
+        if self.queue:
+            paquet = self.queue.pop(0)
+            print(f"Paquet {paquet.id} est sorti du buffer")
+            self.paquets_transmis.append(paquet)
 
 
 class Paquet(object):
@@ -72,14 +73,14 @@ class Paquet(object):
     
 
 def test():
-    s1 = Source()
-    buffer = Buffer(10)
-    paquets = s1.generer_paquet()
-    for elt in paquets:
-        s1.arrive(elt, buffer)
-
-    buffer.retrait()
+    s1 = Source(4)
+    buffer = Buffer(15)
+    while True:
+        paquets = s1.generer_paquet()
+        for elt in paquets:
+            s1.arrive(elt, buffer)
 
 
 if __name__ == "__main__":
     test()
+    print(rd.uniform(0, 0.1))
