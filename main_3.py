@@ -18,7 +18,7 @@ class App(customtkinter.CTk):
         self.capaciteT = source.capacite + t1.capacite + t2.capacite + t3.capacite + dest.capacite
         self.pertesT = source.pertes + t1.pertes + t2.pertes + t3.pertes + dest.pertes
         self.texte = 0
-        self.vitesse = 500
+        self.vitesse = 250
         self.flag = True
         font0 = ('Helvetica', 20)
 

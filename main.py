@@ -1,14 +1,15 @@
 import time
 import random as rd
-
+import tkinter as tk
 
 class Source(object):
     id = 0  # variable id pour les sources
-    def __init__(self, lambd):
+    def __init__(self, lambd, time):
         Source.id += 1  # incrémente de + 1 à chaque création d'une source
         self.id = Source.id  # id de la source (appelle genere_id)
         self.paquets = list()  # liste des paquets à envoyer par la source
         self.taux_arrive = lambd
+        self.time = time
 
     def generer_paquet(self):  # fonction qui créer des paquets composées de bits
         paquets = list()
@@ -25,7 +26,7 @@ class Source(object):
     
     def arrive(self, paquet, buffer):  # fonction d'arrivée des paquets dans le buffer
         if paquet.taux_arrive > Buffer.taux_lien:
-            t = rd.uniform(0, 1/self.taux_arrive)
+            t = rd.uniform(0, self.time/self.taux_arrive)
             print(f"Paquet {paquet.id} s'envoie en {t} secondes")
             time.sleep(t)
             buffer + paquet
@@ -56,7 +57,10 @@ class Buffer(object):
         if self.queue:
             paquet = self.queue.pop(0)
             print(f"Paquet {paquet.id} est sorti du buffer")
+            time.sleep(1)
             self.paquets_transmis.append(paquet)
+            print(f"Paquet {paquet.id} est transmis sur le lien")
+            time.sleep(1)
 
 
 class Paquet(object):
@@ -74,17 +78,25 @@ class Paquet(object):
     
 
 def test():
-    s1 = Source(0.5)
+    s1 = Source(1, 4)
     buffer = Buffer(15)
-    paquets = s1.generer_paquet()
-    for elt in paquets:
-        s1.arrive(elt, buffer)
-    
-    for elt in buffer.queue:
-        buffer.retrait()
+    while True:
+        paquets = s1.generer_paquet()
+        for elt in paquets:
+            s1.arrive(elt, buffer)
 
-    print(buffer.queue)
+        for _ in range(len(buffer.queue)):
+            buffer.retrait()
+
+
+class Application(tk.Tk):
+    def __init__(self):
+        super().__init__()
+
+        self.title("Gestion de flux")
+        self.geometry("900x450")
     
 
 if __name__ == "__main__":
-    test()
+    app = Application()
+    app.mainloop()
