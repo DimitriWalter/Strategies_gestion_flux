@@ -2,7 +2,6 @@
 #perla.hajjar@sqy.fr*
 
 
-import multiprocessing.process
 import customtkinter
 import multiprocessing
 

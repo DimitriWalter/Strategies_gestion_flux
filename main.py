@@ -1,7 +1,5 @@
 import time
 import random as rd
-import numpy as np
-import math
 
 
 class Source(object):
@@ -14,7 +12,7 @@ class Source(object):
 
     def generer_paquet(self):  # fonction qui créer des paquets composées de bits
         paquets = list()
-        for _ in range(self.taux_arrive):
+        for _ in range(2):
             contenu = list()
             for i in range(rd.randint(2, 9)):
                 contenu.append("")
@@ -27,6 +25,9 @@ class Source(object):
     
     def arrive(self, paquet, buffer):  # fonction d'arrivée des paquets dans le buffer
         if paquet.taux_arrive > Buffer.taux_lien:
+            t = rd.uniform(0, 1/self.taux_arrive)
+            print(f"Paquet {paquet.id} s'envoie en {t} secondes")
+            time.sleep(t)
             buffer + paquet
         else:
             buffer.paquets_transmis.append(paquet)
@@ -34,7 +35,7 @@ class Source(object):
 
 class Buffer(object):
     id = 0  # variable id pour les buffer
-    taux_lien = 2  # taux de transmission du lien
+    taux_lien = 0.4  # taux de transmission du lien
     def __init__(self, capacite):
         Buffer.id += 1
         self.id = Buffer.id
@@ -65,7 +66,7 @@ class Paquet(object):
         self.id = Paquet.id
         self.source_id = source_id  # id de la source du paquet
         self.contenu = contenu  # contenu du paquet
-        self.taille = len(contenu) * 100  # taille des paquets en bits (taille fictive)
+        self.taille = len(contenu)
         self.taux_arrive = taux
 
     def __str__(self):
@@ -73,14 +74,17 @@ class Paquet(object):
     
 
 def test():
-    s1 = Source(4)
+    s1 = Source(0.5)
     buffer = Buffer(15)
-    while True:
-        paquets = s1.generer_paquet()
-        for elt in paquets:
-            s1.arrive(elt, buffer)
+    paquets = s1.generer_paquet()
+    for elt in paquets:
+        s1.arrive(elt, buffer)
+    
+    for elt in buffer.queue:
+        buffer.retrait()
 
+    print(buffer.queue)
+    
 
 if __name__ == "__main__":
     test()
-    print(rd.uniform(0, 0.1))
