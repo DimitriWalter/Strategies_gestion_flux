@@ -23,7 +23,7 @@ class App(customtkinter.CTk):
         self.transT = source.trans + t1.trans + t2.trans + t3.trans + file_attente.trans + dest.trans
         self.recT = source.rec + t1.rec + t2.rec + t3.rec + file_attente.rec+  dest.rec
         self.flag = True
-        self.temps = []
+        self.temps = [0]
         font0 = ('Helvetica', 20)
         
 
@@ -45,7 +45,7 @@ class App(customtkinter.CTk):
         #entrys
         self.source_lambda = customtkinter.CTkEntry(master=self, placeholder_text="Source λ", font=font0)
         self.buffer_attente_lambda = customtkinter.CTkEntry(master=self, placeholder_text="Transit principal λ", font=font0)
-
+        
         #totaux
         self.totaux = customtkinter.CTkLabel(master=self, text="Totaux", font=font0, text_color="#bf156d")
         self.temps_moyen = customtkinter.CTkLabel(master=self, text="Temps moyen", font=font0)
@@ -178,11 +178,11 @@ class App(customtkinter.CTk):
                 self.simple()
         else:
             source.capacite, source.pertes, source.trans, source.rec = 10000, 0, 0, 0
-            dest.capacite, dest.pertes, dest.trans, dest.rec = 600, 0, 0, 0
-            t1.capacite, t1.pertes, t1.trans, t1.rec = 200, 0, 0, 0
-            t2.capacite, t2.pertes, t2.trans, t2.rec = 200, 0, 0, 0
-            t3.capacite, t3.pertes, t3.trans, t3.rec = 200, 0, 0, 0
-            file_attente.capacite, file_attente.pertes, file_attente.trans, file_attente.rec = 600, 0, 0, 0
+            dest.capacite, dest.pertes, dest.trans, dest.rec = 1000, 0, 0, 0
+            t1.capacite, t1.pertes, t1.trans, t1.rec = 100, 0, 0, 0
+            t2.capacite, t2.pertes, t2.trans, t2.rec = 100, 0, 0, 0
+            t3.capacite, t3.pertes, t3.trans, t3.rec = 100, 0, 0, 0
+            file_attente.capacite, file_attente.pertes, file_attente.trans, file_attente.rec = 1250, 0, 0, 0
             self.config()
             
 
@@ -190,11 +190,12 @@ class App(customtkinter.CTk):
         "rénitialise la simulation"
         self.flag = False
         source.capacite, source.pertes, source.trans, source.rec = 10000, 0, 0, 0
-        dest.capacite, dest.pertes, dest.trans, dest.rec = 500, 0, 0, 0
+        dest.capacite, dest.pertes, dest.trans, dest.rec = 1000, 0, 0, 0
         t1.capacite, t1.pertes, t1.trans, t1.rec = 100, 0, 0, 0
         t2.capacite, t2.pertes, t2.trans, t2.rec = 100, 0, 0, 0
         t3.capacite, t3.pertes, t3.trans, t3.rec = 100, 0, 0, 0
-        file_attente.capacite, file_attente.pertes, file_attente.trans, file_attente.rec = 300, 0, 0, 0
+        file_attente.capacite, file_attente.pertes, file_attente.trans, file_attente.rec = 1250, 0, 0, 0
+        self.temps = [0]
         self.config()
 
     def fillin(self):
@@ -268,24 +269,29 @@ class App(customtkinter.CTk):
         min_key = min(buffers, key=buffers.get)
         if self.flag:
             if dest.capacite > 0:
-                self.fill(float(self.source_lambda.get())/10, source)
+                self.fill(float(self.source_lambda.get())/100, source)
                 self.send(5, min_key, file_attente)
-                self.send(float(self.buffer_attente_lambda.get())/10, file_attente, dest)
+                self.send(float(self.buffer_attente_lambda.get())/100, file_attente, dest)
                 self.config()
-                self.after(100, self.maxcapa)
+                self.after(10, self.maxcapa)
 
     def tour_de_role(self):
         """
         Un paquet est pris de chaque file d’attente, à tour de rôle.
         """
+        buffers = {
+            t1: t1.capacite,
+            t2: t2.capacite,
+            t3: t3.capacite
+        }
         if self.flag:
             if dest.capacite > 0:
-                self.fill(float(self.source_lambda.get())/10, source)
-                for key in self.buffers.keys():
+                self.fill(float(self.source_lambda.get())/100, source)
+                for key in buffers.keys():
                     self.send(2.5, key, file_attente)
-                self.send(float(self.buffer_attente_lambda.get())/10, file_attente, dest)
+                self.send(float(self.buffer_attente_lambda.get())/100, file_attente, dest)
                 self.config()
-                self.after(100, self.tour_de_role)
+                self.after(10, self.tour_de_role)
 
     def rd(self):
         """
@@ -294,20 +300,20 @@ class App(customtkinter.CTk):
         buffers = [t1, t2, t3]
         if self.flag:
             if dest.capacite > 0:
-                self.fill(float(self.source_lambda.get())/10, source)
-                self.send(5, random.choice(buffers, file_attente))
-                self.send(float(self.buffer_attente_lambda.get())/10, file_attente, dest)
+                self.fill(float(self.source_lambda.get())/100, source)
+                self.send(5, random.choice(buffers), file_attente)
+                self.send(float(self.buffer_attente_lambda.get())/100, file_attente, dest)
                 self.config()
-                self.after(100, self.rd)
+                self.after(10, self.rd)
 
     def simple(self):
         if self.flag:
             if dest.capacite > 0:
-                    self.fill(float(self.source_lambda.get())/10, source)
+                    self.fill(float(self.source_lambda.get())/100, source)
                     self.send(5, source, t1)
                     self.send(2.5, t1, dest)
                     self.config()
-                    self.after(100, self.simple)
+                    self.after(10, self.simple)
 
     def fill(self, lamb, buffer):
         num_arrivals = self.poisson_arrivals(lamb)
@@ -344,9 +350,9 @@ class App(customtkinter.CTk):
 
 if __name__ == '__main__':
 
-    source, dest = Buffer(10000), Buffer(500)
+    source, dest = Buffer(10000), Buffer(1000)
     t1, t2, t3 = Buffer(100), Buffer(100), Buffer(100)
-    file_attente = Buffer(300)
+    file_attente = Buffer(1250)
 
     app = App()
     app.mainloop()
