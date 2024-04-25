@@ -17,14 +17,16 @@ from time import time
 class App(customtkinter.CTk):
     def __init__(self):
         super().__init__()
+        # Initialise l'application avec le titre "Stratégies de gestion de flux"
         self.title("Stratégies de gestion de flux")
+        # Calcul des statistiques globales de capacité, pertes, transmission et réception pour tous les éléments du système
         self.capaciteT = source.capacite + t1.capacite + t2.capacite + file_attente.capacite + t3.capacite + dest.capacite
         self.pertesT = source.pertes + t1.pertes + t2.pertes + t3.pertes + file_attente.pertes + dest.pertes
         self.transT = source.trans + t1.trans + t2.trans + t3.trans + file_attente.trans + dest.trans
-        self.recT = source.rec + t1.rec + t2.rec + t3.rec + file_attente.rec+  dest.rec
-        self.flag = True
-        self.temps = [0]
-        font0 = ('Helvetica', 20)
+        self.recT = source.rec + t1.rec + t2.rec + t3.rec + file_attente.rec + dest.rec
+        self.flag = True  # Indicateur pour une certaine fonctionnalité
+        self.temps = [0]  # Liste pour enregistrer le temps
+        font0 = ('Helvetica', 20)  # Définition de la police de caractères
         
 
         #titres horizontaux
