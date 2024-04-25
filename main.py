@@ -164,6 +164,7 @@ class App(customtkinter.CTk):
         #menus
         self.strategy.grid(row=1, column=5, padx=5, pady=2)
 
+
     def start_sim(self):
         """
         Cette fonction commence la simulation
@@ -200,6 +201,7 @@ class App(customtkinter.CTk):
         self.temps = [0]
         self.config()
 
+
     def fillin(self):
         """
         remplis les 3 files d'attentes Bi
@@ -214,6 +216,7 @@ class App(customtkinter.CTk):
                 self.fill(1, t3)
                 self.config()
                 self.after(10, self.fillin)
+
 
     def config(self):
         """
@@ -259,6 +262,7 @@ class App(customtkinter.CTk):
 
         self.temps_moyen.configure(text="{:.3f} s".format(sum(self.temps) / len(self.temps)))
 
+
     def maxcapa(self):
         """
         La file d’attente choisie est celle contenant le plus grand nombre de paquets
@@ -271,11 +275,13 @@ class App(customtkinter.CTk):
         min_key = min(buffers, key=buffers.get)
         if self.flag:
             if dest.capacite > 0:
+                # Remplit la source, envoie des paquets à la file d'attente choisie et de la file d'attente à la destination
                 self.fill(float(self.source_lambda.get())/100, source)
                 self.send(5, min_key, file_attente)
                 self.send(float(self.buffer_attente_lambda.get())/100, file_attente, dest)
                 self.config()
                 self.after(10, self.maxcapa)
+
 
     def tour_de_role(self):
         """
@@ -288,12 +294,14 @@ class App(customtkinter.CTk):
         }
         if self.flag:
             if dest.capacite > 0:
+                # Remplit la source, envoie un paquet de chaque file d'attente et de la file d'attente à la destination
                 self.fill(float(self.source_lambda.get())/100, source)
                 for key in buffers.keys():
                     self.send(2.5, key, file_attente)
                 self.send(float(self.buffer_attente_lambda.get())/100, file_attente, dest)
                 self.config()
                 self.after(10, self.tour_de_role)
+
 
     def rd(self):
         """
@@ -302,28 +310,35 @@ class App(customtkinter.CTk):
         buffers = [t1, t2, t3]
         if self.flag:
             if dest.capacite > 0:
+                # Remplit la source, choisit une file d'attente aléatoire et envoie de cette file d'attente à la destination
                 self.fill(float(self.source_lambda.get())/100, source)
                 self.send(5, random.choice(buffers), file_attente)
                 self.send(float(self.buffer_attente_lambda.get())/100, file_attente, dest)
                 self.config()
                 self.after(10, self.rd)
 
+
     def simple(self):
         if self.flag:
             if dest.capacite > 0:
-                    self.fill(float(self.source_lambda.get())/100, source)
-                    self.send(5, source, t1)
-                    self.send(2.5, t1, dest)
-                    self.config()
-                    self.after(10, self.simple)
+                # Remplit la source, envoie un paquet de la source à t1, puis de t1 à la destination
+                self.fill(float(self.source_lambda.get())/100, source)
+                self.send(5, source, t1)
+                self.send(2.5, t1, dest)
+                self.config()
+                self.after(10, self.simple)
+
 
     def fill(self, lamb, buffer):
+        # Remplit un buffer avec un nombre d'arrivées poissonnien
         num_arrivals = self.poisson_arrivals(lamb)
         for _ in range(num_arrivals):
             buffer.arrivee_paquet(Paquet().get_paquet())
         buffer.rec += num_arrivals
 
+
     def send(self, lamb, buffer_source, buffer_dest):
+        # Envoie un certain nombre de paquets d'un buffer source à un buffer destination avec des intervalles de temps poissonniens
         num_transmissions = self.poisson_arrivals(lamb)
         current_timee = time()
         for _ in range(num_transmissions):
@@ -332,6 +347,7 @@ class App(customtkinter.CTk):
             self.temps.append(temps_attente_paquet)
         buffer_source.trans += num_transmissions
         buffer_dest.rec += num_transmissions
+
 
     def poisson_arrivals(self, lamb):
         # Génère le nombre d'arrivées selon une distribution de Poisson avec le taux lambda
@@ -343,6 +359,7 @@ class App(customtkinter.CTk):
             k += 1
             p *= random.uniform(0, 1)
         return k
+
 
     def poisson_delay(self):
         # Génère un délai selon une distribution de Poisson avec lambda = 1
