@@ -1,9 +1,10 @@
 from source import *
 from time import time
 
+
 class Paquet:
     def __init__(self):
-        # Initialise un objet Paquet avec un paquet généré et un temps d'arrivée²
+        # Initialise un objet Paquet avec un paquet généré et un temps d'arrivée
         self.paquet = Source().generer_paquet()  # Génère un paquet en utilisant la classe Source()
         self.paquet_temps_arrivee = time()  # Enregistre le temps d'arrivée du paquet
 

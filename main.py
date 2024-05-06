@@ -1,10 +1,8 @@
-#mail prof
-#perla.hajjar@sqy.fr*
+# mail prof
+# perla.hajjar@sqy.fr*
 
 
-import multiprocessing.process
 import customtkinter
-import multiprocessing
 import math
 
 
@@ -27,16 +25,15 @@ class App(customtkinter.CTk):
         self.flag = True  # Indicateur pour une certaine fonctionnalité
         self.temps = [0]  # Liste pour enregistrer le temps
         font0 = ('Helvetica', 20)  # Définition de la police de caractères
-        
 
-        #titres horizontaux
+        # titres horizontaux
         self.titreBuffer = customtkinter.CTkLabel(master=self, text="Buffers", font=font0, text_color="#0c7399")
         self.paquetsT = customtkinter.CTkLabel(master=self, text="Paquets transmis", font=font0, text_color="#0c7399")
         self.paquetsR = customtkinter.CTkLabel(master=self, text="Paquets recus", font=font0, text_color="#0c7399")
         self.capa = customtkinter.CTkLabel(master=self, text="Capacité", font=font0, text_color="#0c7399")
         self.pertes = customtkinter.CTkLabel(master=self, text="Pertes",font=font0, text_color="#0c7399")
 
-        #buffers
+        # buffers
         self.source = customtkinter.CTkLabel(master=self, text="Source", font=font0, text_color="#0c7399")
         self.transit1 = customtkinter.CTkLabel(master=self, text="Transit 1", font=font0, text_color="#0c7399")
         self.transit2 = customtkinter.CTkLabel(master=self, text="Transit 2", font=font0, text_color="#0c7399")
@@ -44,19 +41,20 @@ class App(customtkinter.CTk):
         self.buffer_attente = customtkinter.CTkLabel(master=self, text="File d'attente", font=font0, text_color="#0c7399")
         self.dest = customtkinter.CTkLabel(master=self, text="Destination", font=font0, text_color="#0c7399")
 
-        #entrys
+        # entrys
         self.source_lambda = customtkinter.CTkEntry(master=self, placeholder_text="Source λ", font=font0)
         self.buffer_attente_lambda = customtkinter.CTkEntry(master=self, placeholder_text="Transit principal λ", font=font0)
-        
-        #totaux
+
+        # totaux
         self.totaux = customtkinter.CTkLabel(master=self, text="Totaux", font=font0, text_color="#bf156d")
         self.temps_moyen = customtkinter.CTkLabel(master=self, text="Temps moyen", font=font0)
-        #boutons
+
+        # boutons
         self.start = customtkinter.CTkButton(master=self, text="Start", font=font0, command=self.start_sim)
         self.restart = customtkinter.CTkButton(master=self, text="Restart", font=font0, command=self.restart_func)
         self.remplir = customtkinter.CTkButton(master=self, text="Fill", font=font0, command=self.fillin)
 
-        #capacités
+        # capacités
         self.capa_source = customtkinter.CTkLabel(master=self, text=source.capacite, font=font0)
         self.capa_transit1 = customtkinter.CTkLabel(master=self, text=t1.capacite, font=font0)
         self.capa_transit2 = customtkinter.CTkLabel(master=self, text=t2.capacite, font=font0)
@@ -65,7 +63,7 @@ class App(customtkinter.CTk):
         self.capa_file = customtkinter.CTkLabel(master=self, text=file_attente.capacite, font=font0)
         self.capa_tot = customtkinter.CTkLabel(master=self, text=self.capaciteT, font=font0, text_color="#bf156d")
 
-        #pertes
+        # pertes
         self.pertes_source = customtkinter.CTkLabel(master=self, text=source.pertes, font=font0)
         self.pertes_transit1 = customtkinter.CTkLabel(master=self, text=t1.pertes, font=font0)
         self.pertes_transit2 = customtkinter.CTkLabel(master=self, text=t2.pertes, font=font0)
@@ -74,7 +72,7 @@ class App(customtkinter.CTk):
         self.pertes_dest = customtkinter.CTkLabel(master=self, text=dest.pertes, font=font0)
         self.pertes_tot = customtkinter.CTkLabel(master=self, text=self.pertesT, font=font0, text_color="#bf156d")
 
-        #fichiers transmis
+        # fichiers transmis
         self.trans_source = customtkinter.CTkLabel(master=self, text=source.trans, font=font0)
         self.trans_transit1 = customtkinter.CTkLabel(master=self, text=t1.trans, font=font0)
         self.trans_transit2 = customtkinter.CTkLabel(master=self, text=t2.trans, font=font0)
@@ -83,7 +81,7 @@ class App(customtkinter.CTk):
         self.trans_dest = customtkinter.CTkLabel(master=self, text=dest.trans, font=font0)
         self.trans_tot = customtkinter.CTkLabel(master=self, text=self.transT, font=font0, text_color="#bf156d")
 
-        #fichiers recus
+        # fichiers recus
         self.rec_source = customtkinter.CTkLabel(master=self, text=source.rec, font=font0)
         self.rec_transit1 = customtkinter.CTkLabel(master=self, text=t1.rec, font=font0)
         self.rec_transit2 = customtkinter.CTkLabel(master=self, text=t2.rec, font=font0)
@@ -92,19 +90,19 @@ class App(customtkinter.CTk):
         self.rec_dest = customtkinter.CTkLabel(master=self, text=dest.rec, font=font0)
         self.rec_tot = customtkinter.CTkLabel(master=self, text=self.recT, font=font0, text_color="#bf156d")
 
-        #menus
+        # menus
         self.strategy = customtkinter.CTkOptionMenu(master=self, values=["Max capacités", "Tour de rôle", "Random", "Simple"])
 
-        ###############################################################################################
-        #widget packing
-        #titres
+        ######################################################################
+        # widget packing
+        # titres
         self.titreBuffer.grid(row=0, column=0, padx=10, pady=2)
         self.paquetsT.grid(row=0, column=1, padx=10, pady=2)
         self.paquetsR.grid(row=0, column=2, padx=10, pady=2)
         self.capa.grid(row=0, column=3, padx=10, pady=2)
         self.pertes.grid(row=0, column=4, padx=10, pady=2)
 
-        #buffers
+        # buffers
         self.source.grid(row=1, column=0, padx=10, pady=2)
         self.transit1.grid(row=2, column=0, padx=10, pady=2)
         self.transit2.grid(row=3, column=0, padx=10, pady=2)
@@ -112,14 +110,14 @@ class App(customtkinter.CTk):
         self.buffer_attente.grid(row=5, column=0, padx=10, pady=2)
         self.dest.grid(row=6, column=0, padx=10, pady=2)
 
-        #entrys
+        # entrys
         self.source_lambda.grid(row=2, column=5, padx=5, pady=2)
         self.buffer_attente_lambda.grid(row=3, column=5, padx=5, pady=2)
 
-        #totaux:
+        # totaux:
         self.totaux.grid(row=7, column=0, padx=10, pady=2)
         self.temps_moyen.grid(row=4, column=5, padx=10, pady=2)
-        #fichiers transmis
+        # fichiers transmis
         self.trans_source.grid(row=1, column=1, padx=10, pady=2)
         self.trans_transit1.grid(row=2, column=1, padx=10, pady=2)
         self.trans_transit2.grid(row=3, column=1, padx=10, pady=2)
@@ -128,7 +126,7 @@ class App(customtkinter.CTk):
         self.trans_dest.grid(row=6, column=1, padx=10, pady=2)
         self.trans_tot.grid(row=7, column=1, padx=10, pady=2)
 
-        #fichiers recus
+        # fichiers recus
         self.rec_source.grid(row=1, column=2, padx=10, pady=2)
         self.rec_transit1.grid(row=2, column=2, padx=10, pady=2)
         self.rec_transit2.grid(row=3, column=2, padx=10, pady=2)
@@ -137,7 +135,7 @@ class App(customtkinter.CTk):
         self.rec_dest.grid(row=6, column=2, padx=10, pady=2)
         self.rec_tot.grid(row=7, column=2, padx=10, pady=2)
 
-        #capacité
+        # capacité
         self.capa_source.grid(row=1, column=3, padx=10, pady=2)
         self.capa_transit1.grid(row=2, column=3, padx=10, pady=2)
         self.capa_transit2.grid(row=3, column=3, padx=10, pady=2)
@@ -146,7 +144,7 @@ class App(customtkinter.CTk):
         self.capa_dest.grid(row=6, column=3, padx=10, pady=2)
         self.capa_tot.grid(row=7, column=3, padx=10, pady=2)
 
-        #pertes
+        # pertes
         self.pertes_source.grid(row=1, column=4, padx=10, pady=2)
         self.pertes_transit1.grid(row=2, column=4, padx=10, pady=2)
         self.pertes_transit2.grid(row=3, column=4, padx=10, pady=2)
@@ -155,15 +153,13 @@ class App(customtkinter.CTk):
         self.pertes_dest.grid(row=6, column=4, padx=10, pady=2)
         self.pertes_tot.grid(row=7, column=4, padx=10, pady=2)
 
-        #boutons
+        # boutons
         self.start.grid(row=0, column=5, padx=5, pady=2)
         self.restart.grid(row=0, column=6, padx=5, pady=2)
         self.remplir.grid(row=0, column=7, padx=5, pady=2)
 
-
-        #menus
+        # menus
         self.strategy.grid(row=1, column=5, padx=5, pady=2)
-
 
     def start_sim(self):
         """
@@ -187,7 +183,6 @@ class App(customtkinter.CTk):
             t3.capacite, t3.pertes, t3.trans, t3.rec = 100, 0, 0, 0
             file_attente.capacite, file_attente.pertes, file_attente.trans, file_attente.rec = 1250, 0, 0, 0
             self.config()
-            
 
     def restart_func(self):
         "rénitialise la simulation"
@@ -200,7 +195,6 @@ class App(customtkinter.CTk):
         file_attente.capacite, file_attente.pertes, file_attente.trans, file_attente.rec = 1250, 0, 0, 0
         self.temps = [0]
         self.config()
-
 
     def fillin(self):
         """
@@ -217,7 +211,6 @@ class App(customtkinter.CTk):
                 self.config()
                 self.after(10, self.fillin)
 
-
     def config(self):
         """
         Actualise l'affichage des labels
@@ -225,23 +218,23 @@ class App(customtkinter.CTk):
         self.capa_source.configure(text=source.capacite)
         self.trans_source.configure(text=source.trans)
         self.rec_source.configure(text=source.rec)
-        #transit1
+        # transit1
         self.capa_transit1.configure(text=t1.capacite)
         self.pertes_transit1.configure(text=t1.pertes)
         self.trans_transit1.configure(text=t1.trans)
         self.rec_transit1.configure(text=t1.rec)
-        #transit2
+        # transit2
         self.capa_transit2.configure(text=t2.capacite)
         self.pertes_transit2.configure(text=t2.pertes)
         self.trans_transit2.configure(text=t2.trans)
         self.rec_transit2.configure(text=t2.rec)
-        #transit3
+        # transit3
         self.capa_transit3.configure(text=t3.capacite)
         self.pertes_transit3.configure(text=t3.pertes)
         self.trans_transit3.configure(text=t3.trans)
         self.rec_transit3.configure(text=t3.rec)
 
-        #file d'attente principale
+        # file d'attente principale
         self.capa_file.configure(text=file_attente.capacite)
         self.pertes_file.configure(text=file_attente.pertes)
         self.trans_file.configure(text=file_attente.trans)
@@ -253,7 +246,7 @@ class App(customtkinter.CTk):
         self.transT = source.trans + t1.trans + t2.trans + t3.trans + file_attente.trans + dest.trans
         self.recT = source.rec + t1.rec + t2.rec + t3.rec + file_attente.rec+  dest.rec
         self.pertes_source.configure(text=source.pertes)
-        
+
         self.pertes_dest.configure(text=dest.pertes)
         self.pertes_tot.configure(text=self.pertesT)
         self.rec_tot.configure(text=self.recT)
@@ -261,7 +254,6 @@ class App(customtkinter.CTk):
         self.capa_tot.configure(text=self.capaciteT)
 
         self.temps_moyen.configure(text="{:.3f} s".format(sum(self.temps) / len(self.temps)))
-
 
     def maxcapa(self):
         """
@@ -282,7 +274,6 @@ class App(customtkinter.CTk):
                 self.config()
                 self.after(10, self.maxcapa)
 
-
     def tour_de_role(self):
         """
         Un paquet est pris de chaque file d’attente, à tour de rôle.
@@ -302,7 +293,6 @@ class App(customtkinter.CTk):
                 self.config()
                 self.after(10, self.tour_de_role)
 
-
     def rd(self):
         """
         La file d’attente est choisie de manière aléatoire
@@ -317,7 +307,6 @@ class App(customtkinter.CTk):
                 self.config()
                 self.after(10, self.rd)
 
-
     def simple(self):
         if self.flag:
             if dest.capacite > 0:
@@ -328,14 +317,12 @@ class App(customtkinter.CTk):
                 self.config()
                 self.after(10, self.simple)
 
-
     def fill(self, lamb, buffer):
         # Remplit un buffer avec un nombre d'arrivées poissonnien
         num_arrivals = self.poisson_arrivals(lamb)
         for _ in range(num_arrivals):
             buffer.arrivee_paquet(Paquet().get_paquet())
         buffer.rec += num_arrivals
-
 
     def send(self, lamb, buffer_source, buffer_dest):
         # Envoie un certain nombre de paquets d'un buffer source à un buffer destination avec des intervalles de temps poissonniens
@@ -348,7 +335,6 @@ class App(customtkinter.CTk):
         buffer_source.trans += num_transmissions
         buffer_dest.rec += num_transmissions
 
-
     def poisson_arrivals(self, lamb):
         # Génère le nombre d'arrivées selon une distribution de Poisson avec le taux lambda
         # Utilise l'approche de la méthode de l'inversion de la fonction de répartition inverse
@@ -359,7 +345,6 @@ class App(customtkinter.CTk):
             k += 1
             p *= random.uniform(0, 1)
         return k
-
 
     def poisson_delay(self):
         # Génère un délai selon une distribution de Poisson avec lambda = 1

@@ -1,6 +1,7 @@
 class Buffer:
     def __init__(self, b_capacite=100):
-        # Initialise un objet Buffer avec une capacité définie, des statistiques de pertes et de réception, et un buffer vide
+        # Initialise un objet Buffer avec une capacité définie,
+        # des statistiques de pertes et de réception, et un buffer vide
         self.buffer = [[] for _ in range(b_capacite)]
         self.capacite = b_capacite  # Capacité actuelle du buffer
         self.pertes = 0  # Nombre de paquets perdus
@@ -10,7 +11,7 @@ class Buffer:
     def capacite_minus(self, amount):
         # Réduit la capacité du buffer de la quantité donnée
         self.capacite -= amount
-        # Supprime des éléments du buffer pour correspondre à la nouvelle capacité
+        # Supprime des éléments du buffer pour la nouvelle capacité
         for _ in range(amount):
             self.buffer.remove(self.buffer[-1])
 
@@ -24,9 +25,9 @@ class Buffer:
     def arrivee_paquet(self, paquet):
         # Traite l'arrivée d'un nouveau paquet
         if self.capacite > 0:
-            self.insertion_paquet(paquet)  # Insère le paquet dans le buffer s'il y a de la place
+            self.insertion_paquet(paquet)  # Insère le paquet dans le buffer
         elif self.capacite == 0:
-            self.pertes += 1  # Incrémente le compteur de pertes si le buffer est plein
+            self.pertes += 1  # Incrémente le compteur de pertes si buffer plein
 
     def insertion_paquet(self, paquet):
         # Insère un paquet dans le buffer
