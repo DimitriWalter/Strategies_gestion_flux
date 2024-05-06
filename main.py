@@ -4,6 +4,7 @@
 
 import customtkinter
 import math
+import random
 
 
 from buffer import *
