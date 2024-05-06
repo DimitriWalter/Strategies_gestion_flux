@@ -16,7 +16,7 @@ from time import time
 class App(customtkinter.CTk):
     def __init__(self):
         super().__init__()
-        # Initialise l'application avec le titre "Stratégies de gestion de flux"
+        # Initialise l'application avec le titre
         self.title("Stratégies de gestion de flux")
         # Calcul des statistiques globales de capacité, pertes, transmission et réception pour tous les éléments du système
         self.capaciteT = source.capacite + t1.capacite + t2.capacite + file_attente.capacite + t3.capacite + dest.capacite

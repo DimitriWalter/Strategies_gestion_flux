@@ -21,21 +21,23 @@ class Source:
         self.adresse: str = str(genere_adresse())  # Adresse IP source
         self.destination: str = str(genere_adresse())  # Adresse IP destination
         self.taille: int = genere_taille()  # Taille du paquet
+        self.paquets = []
 
     def generer_paquet(self) -> dict:
         # Génère un paquet avec les attributs de la source et
         # le retourne sous forme de dictionnaire
-        self.paquet = {
+        paquet = {
             "id": self.id,
             "adresse_source": self.adresse,
             "destination": self.destination,
             "taille": self.taille
         }
-        return self.paquet
+        self.paquets.append(paquet)
+        return paquet
 
     def get_source(self):
         # Renvoie les informations de la source sous forme de dictionnaire
-        return self.paquet
+        return self.paquets
 
 
 if __name__ == '__main__':
